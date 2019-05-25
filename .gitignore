@@ -1,1 +1,6 @@
 .idea/
+bin/
+config/
+fabric-utils/crypto-config
+fabric-utils/channel-artifacts
+fabric-utils/docker-compose.yaml
