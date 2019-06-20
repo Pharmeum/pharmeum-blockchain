@@ -25,7 +25,7 @@ networks:
 
 services:
   ca.pharmeum.io:
-    image: hyperledger/fabric-ca:1.4.1
+    image: hyperledger/fabric-ca:latest
     container_name: ca.pharmeum.io
     environment:
       - FABRIC_CA_HOME=/etc/hyperledger/fabric-ca-server
@@ -45,10 +45,10 @@ services:
 
   orderer.pharmeum.io:
     container_name: orderer.pharmeum.io
-    image: hyperledger/fabric-orderer:1.4.1
+    image: hyperledger/fabric-orderer:latest
     environment:
       - FABRIC_LOGGING_SPEC=debug
-      - ORDERER_GENERAL_LISTENADDRESS=0.0.0.0
+      - ORDERER_GENERAL_LISTENADDRESS=orderer.pharmeum.io
       - ORDERER_GENERAL_GENESISMETHOD=file
       - ORDERER_GENERAL_GENESISFILE=/var/hyperledger/orderer/orderer.genesis.block
       - ORDERER_GENERAL_LOCALMSPID=PharmeumOrdererMSP
@@ -74,10 +74,10 @@ services:
 
   reserved_orderer.pharmeum.io:
     container_name: reserved_orderer.pharmeum.io
-    image: hyperledger/fabric-orderer:1.4.1
+    image: hyperledger/fabric-orderer:latest
     environment:
       - FABRIC_LOGGING_SPEC=debug
-      - ORDERER_GENERAL_LISTENADDRESS=0.0.0.0
+      - ORDERER_GENERAL_LISTENADDRESS=reserved_orderer.pharmeum.io
       - ORDERER_GENERAL_GENESISMETHOD=file
       - ORDERER_GENERAL_GENESISFILE=/var/hyperledger/orderer/orderer.genesis.block
       - ORDERER_GENERAL_LOCALMSPID=PharmeumOrdererMSP
@@ -115,10 +115,10 @@ services:
 
   peer0.pharmeum.io:
     container_name: peer0.pharmeum.io
-    image: hyperledger/fabric-peer:1.4.1
+    image: hyperledger/fabric-peer:latest
     environment:
       - FABRIC_LOGGING_SPEC=debug
-      - CORE_CHAINCODE_LOGGING_LEVEL=info
+      - CORE_CHAINCODE_LOGGING_LEVEL=debug
       - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
       - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=${COMPOSE_PROJECT_NAME}_pharmeum
       - CORE_PEER_TLS_ENABLED=true
@@ -130,9 +130,9 @@ services:
       - CORE_PEER_TLS_ROOTCERT_FILE=/etc/hyperledger/fabric/tls/ca.crt
       - CORE_PEER_ID=peer0.pharmeum.io
       - CORE_PEER_ADDRESS=peer0.pharmeum.io:7051
-      - CORE_PEER_CHAINCODEADDRESS=peer0.pharmeum.io:7052
-      - CORE_PEER_CHAINCODELISTENADDRESS=0.0.0.0:7052
       - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer0.pharmeum.io:7051
+      - CORE_PEER_CHAINCODEADDRESS=peer0.pharmeum.io:7052
+      - CORE_PEER_CHAINCODELISTENADDRESS=peer0.pharmeum.io:7052
       - CORE_PEER_LOCALMSPID=PharmeumMSP
       - CORE_LEDGER_STATE_STATEDATABASE=CouchDB
       - CORE_LEDGER_STATE_COUCHDBCONFIG_COUCHDBADDRESS=pharmeum-couchdb:5984
@@ -156,7 +156,7 @@ services:
 
   cli:
     container_name: cli
-    image: hyperledger/fabric-tools:1.4.1
+    image: hyperledger/fabric-tools:latest
     tty: true
     stdin_open: true
     environment:
@@ -166,16 +166,16 @@ services:
       - CORE_PEER_ID=cli
       - CORE_PEER_ADDRESS=peer0.pharmeum.io:7051
       - CORE_PEER_LOCALMSPID=PharmeumMSP
+      - CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/pharmeum.io/users/Admin@pharmeum.io/msp
       - CORE_PEER_TLS_ENABLED=true
       - CORE_PEER_TLS_CERT_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/pharmeum.io/peers/peer0.pharmeum.io/tls/server.crt
       - CORE_PEER_TLS_KEY_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/pharmeum.io/peers/peer0.pharmeum.io/tls/server.key
       - CORE_PEER_TLS_ROOTCERT_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/pharmeum.io/peers/peer0.pharmeum.io/tls/ca.crt
-      - CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/pharmeum.io/users/Admin@pharmeum.io/msp
     working_dir: /opt/gopath/src/github.com/hyperledger/fabric/peer
     command: /bin/bash
     volumes:
       - /var/run/:/host/var/run/
-#      - ./chaincodes/:/opt/gopath/src/github.com/chaincodes
+      - ../../pharmeum-cc-payment/:/opt/gopath/src/github.com/Pharmeum/pharmeum-cc-payment
       - ./crypto-config:/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/
       - ./channel-artifacts:/opt/gopath/src/github.com/hyperledger/fabric/peer/channel-artifacts
     depends_on:

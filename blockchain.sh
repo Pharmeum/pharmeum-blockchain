@@ -28,8 +28,21 @@ case $1 in
     ./scripts/generate/configs.sh
     ./scripts/generate/channel_artifacts.sh
     ./scripts/replace.sh
+
+    cd ..
+
+    if [[ ! -d "pharmeum-cc-payment" ]]; then
+        echo "cloning pharmeum payment chaincode"
+        git clone git@github.com:Pharmeum/pharmeum-cc-payment.git
+    fi
+
+    cd pharmeum-cc-payment && git pull
+    cd ../pharmeum-blockchain/
+
+
     docker-compose -f ./fabric-utils/docker-compose.yaml up -d
     ./scripts/channel.sh
+    ./scripts/chaincodes.sh
     ;;
 "down")
     docker-compose -f ./fabric-utils/docker-compose.yaml down
