@@ -14,10 +14,24 @@
 # limitations under the License.
 # ------------------------------------------------------------------------------
 #!/usr/bin/env bash
+
+#set -e
+
+cd ../pharmeum-cc-payment/
+export PAYMENTCCVERSION=1.0
+#$(git rev-parse HEAD)
+cd ../pharmeum-blockchain
+
+export PAYMENTCCNAME="pharmeumccpayment"
+export PAYMENTCCCODE="github.com/Pharmeum/pharmeum-cc-payment/"
 #export ORDERER_CA=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/ordererOrganizations/pharmeum.io/orderers/orderer.pharmeum.io/msp/tlscacerts/tlsca.pharmeum.io-cert.pem
 
 export ORDERER_CA=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/ordererOrganizations/pharmeum.io/orderers/reserved_orderer.pharmeum.io/msp/tlscacerts/tlsca.pharmeum.io-cert.pem
 
 
-docker exec cli peer channel create -o orderer.pharmeum.io:7050 -c pharmeum-channel -f ./channel-artifacts/channel.tx --tls --cafile $ORDERER_CA
-docker exec cli peer channel join -b ./channel-artifacts/orderer.genesis.block --tls --cafile $ORDERER_CA
+export LANGUAGE="golang"
+
+#install chaincode
+docker exec cli peer chaincode install -n $PAYMENTCCNAME -v $PAYMENTCCVERSION -l ${LANGUAGE} -p $PAYMENTCCCODE
+docker exec cli peer chaincode instantiate -o orderer.pharmeum.io:7050 --tls true --cafile $ORDERER_CA -C pharmeum-channel \
+        -n $PAYMENTCCNAME -l $LANGUAGE -v $PAYMENTCCVERSION -c '{"Args":[]}' -c '{"Args":[]}' -P "OR ('PharmeumMSP.peer')"
