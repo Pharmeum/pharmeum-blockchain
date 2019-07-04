@@ -55,6 +55,8 @@ case $1 in
     if [[ -d "./fabric-utils/crypto-config" ]]; then
         rm -rf ./fabric-utils/crypto-config/
     fi
+
+    scripts/remove/chaincode.sh
     ;;
 "start")
     #TODO: IMPLEMENT
