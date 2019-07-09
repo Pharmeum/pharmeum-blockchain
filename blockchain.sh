@@ -15,7 +15,7 @@
 # ------------------------------------------------------------------------------
 #!/usr/bin/env bash
 
-export COMPOSE_PROJECT_NAME=pharmeum
+export COMPOSE_PROJECT_NAME=net
 
 case $1 in
 "up")
@@ -56,9 +56,9 @@ case $1 in
         rm -rf ./fabric-utils/crypto-config/
     fi
 
+"start")
     scripts/remove/chaincode.sh
     ;;
-"start")
     #TODO: IMPLEMENT
     echo "start command is not supported yet, use 'up' instead"
     ;;

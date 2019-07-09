@@ -89,7 +89,7 @@ Orderer: &OrdererDefaults
   OrdererType: solo
   Addresses:
     - pharmeum.io:7050
-  BatchTimeout: 1s
+  BatchTimeout: 3s
   BatchSize:
     MaxMessageCount: 100
     AbsoluteMaxBytes: 98 MB

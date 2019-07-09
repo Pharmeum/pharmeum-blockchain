@@ -14,7 +14,7 @@
 # limitations under the License.
 # ------------------------------------------------------------------------------
 
-version: '2'
+version: '3.5'
 
 volumes:
   orderer.pharmeum.io:
@@ -22,6 +22,8 @@ volumes:
 
 networks:
   pharmeum:
+    external:
+      name: net_pharmeum
 
 services:
   ca.pharmeum.io:
