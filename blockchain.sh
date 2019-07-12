@@ -28,6 +28,8 @@ case $1 in
     ./scripts/generate/configs.sh
     ./scripts/generate/channel_artifacts.sh
     ./scripts/replace.sh
+    ./scripts/remove/chaincode.sh
+
 
     cd ..
 
@@ -55,12 +57,8 @@ case $1 in
     if [[ -d "./fabric-utils/crypto-config" ]]; then
         rm -rf ./fabric-utils/crypto-config/
     fi
-
-"start")
-    scripts/remove/chaincode.sh
     ;;
-    #TODO: IMPLEMENT
-    echo "start command is not supported yet, use 'up' instead"
+"start")
     ;;
 "stop")
     # Exit on first error, print all commands.
